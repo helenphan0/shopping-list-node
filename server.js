@@ -83,7 +83,6 @@ app.delete('/items/:id', jsonParser, function(request, response) {
 app.put('items/:id', jsonParser, function(request, response) {
 	i = request.params.id;
 
-
 // need to pass ID to request.body, grab edited item text
 
 
@@ -95,17 +94,6 @@ app.put('items/:id', jsonParser, function(request, response) {
 	}
 
 });
-
-
-// check to see if an item exists with id from url
-app.get('/items/:id', jsonParser, function(request, response) {
-	i = request.params.id;	
-	var b = searchId(i, storage.items);
-	var c = storage.items.indexOf(b);
-	response.json(storage.items[c]);
-
-});
-
 
 
 app.listen(3333, '127.0.0.1');
