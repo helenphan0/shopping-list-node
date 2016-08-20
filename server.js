@@ -15,11 +15,12 @@ Storage.prototype.add = function(name) {
 	return item;
 };
 
-// mocked this from add method, see above
-Storage.prototype.edit = function(name, id) {
-	var item = {name: name, id:'' };
-	this.items.push(item);
-	this.id = id;
+Storage.prototype.edit = function(item) {
+	for (var i = 0; i < this.items.length; i++) {
+		if ( this.items[i].id == item.id) {
+			this.items[i].name = item.name;
+		};
+	};
 	return item;
 };
 
@@ -27,19 +28,18 @@ function searchId(value, arr) {
 	for (var x = 0; x < arr.length; x++) {
 		if (arr[x].id == value) {
 			return arr[x];
-		}
-	}
-}
+		};
+	};
+};
 
 function searchName(value, arr) {
 	for (var x = 0; x < arr.length; x++) {
 		if (arr[x].name == value) {
 			return arr[x];
-		}
-	}
-}
+		};
+	};
+};
 	
-var i;
 
 var storage = new Storage();
 storage.add('Shovel');
@@ -54,6 +54,13 @@ app.get('/items', function(request, response) {
 	response.json(storage.items);
 });
 
+app.get('/items/:id', function(request, response) {
+	i = request.params.id;
+	var a = searchId(i, storage.items);
+	var c = storage.items.indexOf(a);
+	response.json(storage.items[c]);
+});
+
 app.post('/items', jsonParser, function(request, response){
 	if (!request.body) {
 		return response.sendStatus(400);
@@ -63,8 +70,12 @@ app.post('/items', jsonParser, function(request, response){
 });
 
 app.delete('/items/:id', jsonParser, function(request, response) {
-	i = request.params.id;
-	var k = searchId(i, storage.items);
+	var h = request.params.id;
+
+	// k is the object with the id value of i
+	var k = searchId(h, storage.items);
+
+	// j is the index of k object
 	var j = storage.items.indexOf(k);
 
 	console.log(k);
@@ -80,20 +91,16 @@ app.delete('/items/:id', jsonParser, function(request, response) {
 
 });
 
-app.put('items/:id', jsonParser, function(request, response) {
-	i = request.params.id;
-
-// need to pass ID to request.body, grab edited item text
-
-
-	if (storage.items[c] == undefined) {
-
-		// pulled this from POST add
-		var edit = storage.edit(request.body.name, i);
-		return response.json(edit);
-	}
-
+app.put('/items/:id', jsonParser, function(request, response) {
+	if (!request.body) {
+		return response.status(400).json('Error, abort');
+	};
+	var edit = storage.edit(request.body);
+	response.json(edit);
+	
 });
 
 
-app.listen(3333, '127.0.0.1');
+app.listen(3333, function(){ 	
+	console.log('Server started at http://localhost:3333');
+});
