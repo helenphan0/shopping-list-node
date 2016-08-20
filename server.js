@@ -104,3 +104,6 @@ app.put('/items/:id', jsonParser, function(request, response) {
 app.listen(process.env.PORT, function(){ 	
 	console.log('Server started at http://localhost:3333');
 });
+
+exports.app = app;
+exports.storage = storage;
