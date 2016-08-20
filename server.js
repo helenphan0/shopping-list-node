@@ -101,6 +101,6 @@ app.put('/items/:id', jsonParser, function(request, response) {
 });
 
 
-app.listen(3333, function(){ 	
+app.listen(process.env.PORT, function(){ 	
 	console.log('Server started at http://localhost:3333');
 });
